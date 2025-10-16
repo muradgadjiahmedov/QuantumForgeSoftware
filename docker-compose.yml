@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  rag-api:
+    build: .
+    image: rag-bot:latest
+    container_name: rag-api
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=gpt-4o-mini
+      - INDEX_PATH=/app/vector_store/faiss_index
+      - EMB_MODEL=BAAI/bge-base-en-v1.5
+    ports:
+      - "8000:8000"
+    volumes:
+      - faiss_index:/app/vector_store/faiss_index:rw
+      - ./knowledge_base:/app/knowledge_base:ro
+    restart: unless-stopped
+
+volumes:
+  faiss_index:
